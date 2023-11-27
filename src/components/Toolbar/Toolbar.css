@@ -1,0 +1,25 @@
+.Toolbar {
+  padding: 25px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.Toolbar .logo {
+  text-decoration: none;
+}
+
+.Toolbar .navigation ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+}
+
+.Toolbar .navigation a {
+  text-decoration: none;
+}
+
+.active {
+  color: #356565;
+}
