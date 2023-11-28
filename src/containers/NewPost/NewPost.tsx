@@ -1,11 +1,18 @@
 import React from 'react';
 import AddForm from '../../components/AddForm/AddForm.tsx';
+import axiosApi from '../../axios-api.ts';
 import {FormPost, Post} from '../../types';
 
 const NewPost = () => {
-  const onSubmit = (post: FormPost) => {
+  const onSubmit = async (post: FormPost) => {
     const newPost: Post = {...post, dateTime: new Date().toISOString()};
-    console.log(newPost);
+    try {
+      await axiosApi.post('/posts.json', newPost);
+      console.log(newPost);
+    } catch (error: Error) {
+      console.log(error);
+    }
+
   };
   return (
     <div>
