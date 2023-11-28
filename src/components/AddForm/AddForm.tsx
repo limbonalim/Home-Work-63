@@ -15,6 +15,10 @@ const AddForm: React.FC<Props> = ({onSubmit}) => {
   const onFormSubmit = (event: FormEvent) => {
     event.preventDefault();
     onSubmit(post);
+    setPost(prevState => ({
+      title: '',
+      description: ''
+    }))
   };
 
   const onChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

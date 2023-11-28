@@ -6,7 +6,7 @@ interface Props {
   title: string;
 }
 
-const ShorPost:React.FC<Props> = ({dateTime, title}) => {
+const ShorPost: React.FC<Props> = ({dateTime, title}) => {
   const data = new FormatDate(dateTime);
   return (
     <div className="border btn-secondary border-2 rounded p-2">

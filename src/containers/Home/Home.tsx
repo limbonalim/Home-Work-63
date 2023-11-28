@@ -32,10 +32,10 @@ const Home = () => {
       dateTime={post.dateTime}
       title={post.title}
     />
-  ))
+  ));
 
   return (
-    <div className="d-flex gap-2 flex-column">
+    <div className="d-flex gap-2 flex-column-reverse">
       {listOfPosts}
     </div>
   );
