@@ -1,21 +1,32 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import FormatDate from '../FormatDate/FormatDate';
 import {Post} from '../../types';
+import axiosApi from '../../axios-api';
 
 interface Props {
   post: Post;
+  onChange: () => void;
 }
 
-const MemoFullPost: React.FC<Props> = React.memo(function FullPost({post}) {
+const MemoFullPost: React.FC<Props> = React.memo(function FullPost({post, onChange}) {
   let date = new FormatDate(post.dateTime);
+  const navigate = useNavigate();
+  const onDelete = async () => {
+    await axiosApi.delete(`/posts/${post.id}.json`);
+    navigate('/');
+    onChange();
+  };
   return (
     <div className="border p-2 rounded col-4">
       <h3>{post.title}</h3>
       <p>{post.description}</p>
-      <span>Created in: {date.getDate()}</span>
+      <span>Created on: {date.getDate()}</span>
       <div className="d-flex gap-2 my-3">
-        <button className="btn btn-outline-danger">Delete</button>
+        <button
+          onClick={onDelete}
+          className="btn btn-outline-danger"
+        >Delete</button>
         <Link to="?" className="btn btn-outline-primary">Edit</Link>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Route, Routes} from 'react-router-dom';
 import Toolbar from '../../components/Toolbar/Toolbar';
 import NewPost from '../NewPost/NewPost';
@@ -14,7 +14,12 @@ import './App.css';
 const App = () => {
   const [posts, setPosts] = useState<RoteComponent[]>([]);
   const [listPosts, setListPosts] = useState<ApiPost[]>([]);
-  const getPosts = async () => {
+
+  const onChange = () => {
+
+  };
+
+  const getPosts = useCallback(async () => {
     try {
       const posts = await axiosApi.get<Post[]>('/posts.json');
       const listOfPosts: ApiPost[] = [];
@@ -30,17 +35,17 @@ const App = () => {
     } catch (error: Error) {
       console.log(error);
     }
-  };
+  }, [onChange]);
 
   useEffect(() => {
     void getPosts();
-  }, []);
+  }, [getPosts]);
 
   const getListOfPosts = (posts: ApiPost[]) => {
     const fullPostList: RoteComponent[] = posts.map((item) => {
       return {
         path: `/posts/:${item.id}`,
-        component: (<MemoFullPost post={item}/>),
+        component: (<MemoFullPost post={item} onChange={onChange}/>),
       };
     });
     setPosts(fullPostList);
@@ -65,7 +70,7 @@ const App = () => {
             })}
           </Route>
           <Route path="/new-post" element={(
-            <NewPost/>
+            <NewPost onChange={onChange}/>
           )}/>
           <Route path="/about" element={(
             <About/>

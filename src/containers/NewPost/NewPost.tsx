@@ -3,7 +3,11 @@ import AddForm from '../../components/AddForm/AddForm';
 import axiosApi from '../../axios-api';
 import {FormPost, Post} from '../../types';
 
-const NewPost = () => {
+interface Props {
+  onChange: () => void;
+}
+
+const NewPost:React.FC<Props> = ({onChange}) => {
   const onSubmit = async (post: FormPost) => {
     const newPost: Post = {...post, dateTime: new Date().toISOString()};
     try {
@@ -11,7 +15,7 @@ const NewPost = () => {
     } catch (error: Error) {
       console.log(error);
     }
-
+    onChange();
   };
   return (
     <div>
