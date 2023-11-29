@@ -1,20 +1,26 @@
 import React from 'react';
 import FormatDate from '../FormatDate/FormatDate.ts';
+import {NavLink} from 'react-router-dom';
 
 interface Props {
+  id: string;
   dateTime: string;
   title: string;
 }
 
-const ShorPost: React.FC<Props> = ({dateTime, title}) => {
+const ShortPost: React.FC<Props> = ({dateTime, title, id}) => {
   const data = new FormatDate(dateTime);
+  const link = `posts/:${id}`;
   return (
     <div className="border btn-secondary border-2 rounded p-2">
       <p>Created on: {data.getDate()}</p>
       <span className="d-block my-2 fs-3">{title}</span>
-      <button type="button" className="btn btn-secondary">Read more</button>
+      <NavLink
+        to={link}
+        className="btn btn-secondary"
+      >Read more</NavLink>
     </div>
   );
 };
 
-export default ShorPost;
+export default ShortPost;

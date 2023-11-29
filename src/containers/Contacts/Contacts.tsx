@@ -22,6 +22,7 @@ const Contacts = () => {
   useEffect(() => {
     void getEmail();
   }, []);
+
   return (
     <div>
       <h1>Контакты My Blog</h1>
