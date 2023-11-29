@@ -1,6 +1,6 @@
 import React from 'react';
-import FormatDate from '../FormatDate/FormatDate.ts';
 import {NavLink} from 'react-router-dom';
+import FormatDate from '../FormatDate/FormatDate';
 
 interface Props {
   id: string;
@@ -8,7 +8,7 @@ interface Props {
   title: string;
 }
 
-const ShortPost: React.FC<Props> = ({dateTime, title, id}) => {
+const MemoShortPost: React.FC<Props> = React.memo(function ShortPost({dateTime, title, id}) {
   const data = new FormatDate(dateTime);
   const link = `posts/:${id}`;
   return (
@@ -21,6 +21,6 @@ const ShortPost: React.FC<Props> = ({dateTime, title, id}) => {
       >Read more</NavLink>
     </div>
   );
-};
+});
 
-export default ShortPost;
+export default MemoShortPost;

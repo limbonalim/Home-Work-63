@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import axiosApi from '../../axios-api.ts';
-import SocialLink from '../../components/SocialLink/SocialLink.tsx';
+import axiosApi from '../../axios-api';
+import SocialLink from '../../components/SocialLink/SocialLink';
 import {Email} from '../../types';
 
 const Contacts = () => {

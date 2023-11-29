@@ -7,7 +7,6 @@ interface Props {
 
 const AddForm: React.FC<Props> = ({onSubmit}) => {
   const [post, setPost] = useState<FormPost>({
-    // dateTime: new Date().toString(),
     title: '',
     description: '',
   });
@@ -15,10 +14,10 @@ const AddForm: React.FC<Props> = ({onSubmit}) => {
   const onFormSubmit = (event: FormEvent) => {
     event.preventDefault();
     onSubmit(post);
-    setPost(prevState => ({
+    setPost({
       title: '',
       description: ''
-    }))
+    });
   };
 
   const onChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

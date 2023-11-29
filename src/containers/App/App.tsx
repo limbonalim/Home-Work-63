@@ -1,23 +1,46 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Route, Routes} from 'react-router-dom';
-import Toolbar from '../../components/Toolbar/Toolbar.tsx';
-import NewPost from '../NewPost/NewPost.tsx';
-import Home from '../Home/Home.tsx';
-import About from '../About/About.tsx';
-import Contacts from '../Contacts/Contacts.tsx';
-import FullPost from '../../components/FullPost/FullPost.tsx';
-import {ApiPost, RoteComponent} from '../../types';
+import Toolbar from '../../components/Toolbar/Toolbar';
+import NewPost from '../NewPost/NewPost';
+import Home from '../Home/Home';
+import About from '../About/About';
+import Contacts from '../Contacts/Contacts';
+import MemoFullPost from '../../components/FullPost/FullPost';
+import {ApiPost, Post, RoteComponent} from '../../types';
+import axiosApi from '../../axios-api';
 import './App.css';
 
 
 const App = () => {
   const [posts, setPosts] = useState<RoteComponent[]>([]);
+  const [listPosts, setListPosts] = useState<ApiPost[]>([]);
+  const getPosts = async () => {
+    try {
+      const posts = await axiosApi.get<Post[]>('/posts.json');
+      const listOfPosts: ApiPost[] = [];
+      for (let post in posts.data) {
+        const apiPost: ApiPost = {
+          ...posts.data[post],
+          id: post,
+        };
+        listOfPosts.push(apiPost);
+      }
+      getListOfPosts(listOfPosts);
+      setListPosts(listOfPosts);
+    } catch (error: Error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    void getPosts();
+  }, []);
 
   const getListOfPosts = (posts: ApiPost[]) => {
     const fullPostList: RoteComponent[] = posts.map((item) => {
       return {
         path: `/posts/:${item.id}`,
-        component: (<FullPost post={item}/>),
+        component: (<MemoFullPost post={item}/>),
       };
     });
     setPosts(fullPostList);
@@ -31,7 +54,7 @@ const App = () => {
       <main className="container my-5">
         <Routes>
           <Route path="/" element={(
-            <Home getListOfPosts={getListOfPosts}/>
+            <Home posts={listPosts}/>
           )}>
             {posts.map((item) => {
               return (<Route

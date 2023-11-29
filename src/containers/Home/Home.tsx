@@ -1,39 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Outlet} from 'react-router-dom';
-import {ApiPost, Post} from '../../types';
-import axiosApi from '../../axios-api.ts';
-import ShortPost from '../../components/Post/ShortPost.tsx';
+import MemoShortPost from '../../components/ShortPost/ShortPost';
+import {ApiPost} from '../../types';
 
 interface Props {
-  getListOfPosts: (posts: ApiPost[]) => void;
+  posts: ApiPost[];
 }
 
-const Home: React.FC<Props> = ({getListOfPosts}) => {
-  const [posts, setPosts] = useState<ApiPost[]>([]);
-  const getPosts = async () => {
-    try {
-      const posts = await axiosApi.get<Post[]>('/posts.json');
-      const listOfPosts: ApiPost[] = [];
-      for (let post in posts.data) {
-        const apiPost: ApiPost = {
-          ...posts.data[post],
-          id: post,
-        };
-        listOfPosts.push(apiPost);
-      }
-      getListOfPosts(listOfPosts);
-      setPosts(listOfPosts);
-    } catch (error: Error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    void getPosts();
-  }, []);
+const Home: React.FC<Props> = ({posts}) => {
 
   const listOfPosts = posts.map((post: ApiPost) => (
-    <ShortPost
+    <MemoShortPost
       key={post.id}
       dateTime={post.dateTime}
       title={post.title}
@@ -42,10 +19,13 @@ const Home: React.FC<Props> = ({getListOfPosts}) => {
   ));
 
   return (
-    <div className="d-flex gap-2 flex-column-reverse">
-      {listOfPosts}
+    <div className="d-flex gap-2">
+      <div className="d-flex gap-2 flex-column-reverse w-100">
+        {listOfPosts}
+      </div>
       <Outlet/>
     </div>
+
   );
 };
 
