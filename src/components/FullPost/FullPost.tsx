@@ -10,13 +10,21 @@ interface Props {
 }
 
 const MemoFullPost: React.FC<Props> = React.memo(function FullPost({post, onChange}) {
-  let date = new FormatDate(post.dateTime);
   const navigate = useNavigate();
+  let date = new FormatDate(post.dateTime);
+
   const onDelete = async () => {
-    await axiosApi.delete(`/posts/${post.id}.json`);
-    navigate('/');
-    onChange();
+    try {
+      await axiosApi.delete(`/posts/${post.id}.json`);
+      navigate('/');
+      onChange();
+    } catch (error: Error) {
+      console.log(error);
+    }
   };
+
+  const editPost: string = `/edit-post/${post.id}`;
+
   return (
     <div className="border p-2 rounded col-4">
       <h3>{post.title}</h3>
@@ -26,8 +34,9 @@ const MemoFullPost: React.FC<Props> = React.memo(function FullPost({post, onChan
         <button
           onClick={onDelete}
           className="btn btn-outline-danger"
-        >Delete</button>
-        <Link to="?" className="btn btn-outline-primary">Edit</Link>
+        >Delete
+        </button>
+        <Link to={editPost} className="btn btn-outline-primary">Edit</Link>
       </div>
     </div>
   );

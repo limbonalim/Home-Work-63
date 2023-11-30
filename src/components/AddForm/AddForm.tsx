@@ -1,19 +1,41 @@
-import React, {ChangeEvent, FormEvent, useState} from 'react';
-import {FormPost} from '../../types';
+import React, {ChangeEvent, FormEvent, useCallback, useEffect, useState} from 'react';
+import {FormPost, Post} from '../../types';
 
 interface Props {
   onSubmit: (post: FormPost) => void;
+  onEdit: (editPost: FormPost) => void;
+  editPost?: Post;
 }
 
-const AddForm: React.FC<Props> = ({onSubmit}) => {
+const AddForm: React.FC<Props> = React.memo(({onSubmit, onEdit, editPost}) => {
   const [post, setPost] = useState<FormPost>({
     title: '',
     description: '',
   });
 
+  if (editPost) {
+    const getEditPost = useCallback(() => {
+      setPost(prevState => {
+        return {
+          ...prevState,
+          title: editPost.title,
+          description: editPost.description,
+        };
+      });
+    }, [editPost.title, editPost.description]);
+
+    useEffect(() => {
+      void getEditPost();
+    }, [getEditPost]);
+  }
+
   const onFormSubmit = (event: FormEvent) => {
     event.preventDefault();
-    onSubmit(post);
+    if (editPost.title.length > 0 && editPost.description.length > 0) {
+      onEdit(post);
+    } else {
+      onSubmit(post);
+    }
     setPost({
       title: '',
       description: ''
@@ -59,6 +81,6 @@ const AddForm: React.FC<Props> = ({onSubmit}) => {
       </form>
     </div>
   );
-};
+});
 
 export default AddForm;

@@ -15,10 +15,6 @@ const App = () => {
   const [posts, setPosts] = useState<RoteComponent[]>([]);
   const [listPosts, setListPosts] = useState<ApiPost[]>([]);
 
-  const onChange = () => {
-
-  };
-
   const getPosts = useCallback(async () => {
     try {
       const posts = await axiosApi.get<Post[]>('/posts.json');
@@ -35,7 +31,7 @@ const App = () => {
     } catch (error: Error) {
       console.log(error);
     }
-  }, [onChange]);
+  }, []);
 
   useEffect(() => {
     void getPosts();
@@ -45,7 +41,7 @@ const App = () => {
     const fullPostList: RoteComponent[] = posts.map((item) => {
       return {
         path: `/posts/:${item.id}`,
-        component: (<MemoFullPost post={item} onChange={onChange}/>),
+        component: (<MemoFullPost post={item} onChange={getPosts}/>),
       };
     });
     setPosts(fullPostList);
@@ -63,14 +59,18 @@ const App = () => {
           )}>
             {posts.map((item) => {
               return (<Route
-                key={item.path}
-                path={item.path}
-                element={item.component}
-              />);
+                  key={item.path}
+                  path={item.path}
+                  element={item.component}
+                />
+              );
             })}
           </Route>
           <Route path="/new-post" element={(
-            <NewPost onChange={onChange}/>
+            <NewPost onChange={getPosts}/>
+          )}/>
+          <Route path="/edit-post/:id" element={(
+            <NewPost onChange={getPosts} title="Edit Post!"/>
           )}/>
           <Route path="/about" element={(
             <About/>
@@ -82,7 +82,6 @@ const App = () => {
             <h1>Not found</h1>
           )}/>
         </Routes>
-
       </main>
     </>
   );
