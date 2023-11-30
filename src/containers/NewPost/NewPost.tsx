@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import AddForm from '../../components/AddForm/AddForm';
 import axiosApi from '../../axios-api';
 import {FormPost, Post} from '../../types';
@@ -22,15 +22,18 @@ const NewPost: React.FC<Props> = ({onChange, getError, title = 'Add new post!'})
   });
 
   if (params.id) {
-    const getPost = async () => {
+    const getPost = useCallback(async () => {
       try {
         const response = await axiosApi.get<Post>(`/posts/${params.id}.json`);
         setPost(response.data);
       } catch (error: Error) {
         getError(error.message);
       }
-    };
-    void getPost();
+    }, [params.id]);
+
+    useEffect(() => {
+      void getPost();
+    }, [getPost]);
   }
 
   const onSubmit = async (post: FormPost) => {
