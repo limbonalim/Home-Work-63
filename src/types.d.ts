@@ -23,3 +23,12 @@ export interface Email {
   editor: string;
   partnerships: string;
 }
+
+export interface AboutData {
+  contacts: string;
+  contactsTwo: string;
+  ourMission: string;
+  welcome: string;
+  whatWillYouFindHere: string;
+  whoAreWe: string;
+}

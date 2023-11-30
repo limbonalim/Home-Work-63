@@ -89,11 +89,11 @@ const App = () => {
             <Route path="/new-post" element={(
               <NewPost onChange={getPosts} getError={getError}/>
             )}/>
-            <Route path="/edit-post/:id" element={(
+            <Route path="/posts/:id/edit" element={(
               <NewPost onChange={getPosts} title="Edit Post!" getError={getError}/>
             )}/>
             <Route path="/about" element={(
-              <About/>
+              <About getError={getError}/>
             )}/>
             <Route path="/contacts" element={(
               <Contacts url="/email.json" getError={getError}/>

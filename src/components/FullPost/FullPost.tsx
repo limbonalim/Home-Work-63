@@ -23,7 +23,7 @@ const MemoFullPost: React.FC<Props> = React.memo(function FullPost({post, onChan
     }
   };
 
-  const editPost: string = `/edit-post/${post.id}`;
+  const editPost: string = `/posts/${post.id}/edit`;
 
   return (
     <div className="border p-2 rounded col-4">

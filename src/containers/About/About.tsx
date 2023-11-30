@@ -1,38 +1,56 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
+import axiosApi from '../../axios-api';
+import Loading from '../../components/Loading/Loading';
+import {AboutData} from '../../types';
 
-const About = () => {
+interface Props {
+  getError: (message: string) => void;
+}
+
+const About: React.FC<Props> = ({getError}) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [data, setData] = useState<AboutData>({
+    contacts: '',
+    contactsTwo: '',
+    ourMission: '',
+    welcome: '',
+    whatWillYouFindHere: '',
+    whoAreWe: '',
+  });
+
+  const getData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axiosApi.get<AboutData>('/about.json');
+      setData(response.data);
+    } catch (error: Error) {
+      getError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void getData();
+  }, [getData]);
+
   return (
-    <div>
-      <h1>Добро пожаловать на My Blog!</h1>
-      <p>Приветствуем вас на нашем уютном уголке в виртуальном пространстве.
-        My Blog - это не просто блог, это место, где истории оживают, и идеи превращаются в слова.
-        Давайте погрузимся в мир увлекательных рассказов, исследований и вдохновения!
-      </p>
-      <h3>Кто мы?</h3>
-      <p>My Blog - это команда энтузиастов, объединенных любовью к исследованию и передаче знаний.
-        Мы разнообразны, как и наши интересы, но нас объединяет страсть к обмену идеями и созданию чего-то уникального.
-        Наши авторы - это профессионалы своего дела, готовые поделиться своим опытом и взглядами.
-      </p>
-      <h3>Что вы найдете здесь?</h3>
-      <p>My Blog предлагает разнообразные темы - от путешествий и культуры до технологий и науки.
-        Мы стремимся создавать контент, который вас вдохновляет, развлекает и расширяет ваши горизонты.
-        Наши статьи охватывают как повседневные темы, так и глубокие исследования, предоставляя вам полный спектр
-        увлекательного контента.
-      </p>
-      <h3>Наша миссия</h3>
-      <p>Мы верим в силу слова и влияние историй. Наша миссия - вдохновлять, обучать и поддерживать нашу аудиторию.
-        Мы стремимся создавать контент, который не только увлекает, но и приносит пользу.
-        My Blog - это не просто место для чтения, это площадка для обмена идеями и формирования сообщества, где каждый
-        может найти что-то для себя.
-      </p>
-      <h3>Связь с нами</h3>
-      <p>Мы гордимся нашим сообществом, и нам важно ваше мнение.
-        Если у вас есть вопросы, предложения или просто хочется поделиться своим опытом, не стесняйтесь <Link
-          to="/contacts">связаться с нами</Link> через наш контактный раздел.
-        Ваш отзыв важен для нас! Спасибо, что выбрали My Blog. Добро пожаловать в увлекательное путешествие по страницам
-        наших историй!</p>
-    </div>
+    <>
+      {loading ? <Loading/> :
+        <div>
+          <h1>Добро пожаловать на My Blog!</h1>
+          <p>{data.welcome}</p>
+          <h3>Кто мы?</h3>
+          <p>{data.whoAreWe}</p>
+          <h3>Что вы найдете здесь?</h3>
+          <p>{data.whatWillYouFindHere}</p>
+          <h3>Наша миссия</h3>
+          <p>{data.ourMission}</p>
+          <h3>Связь с нами</h3>
+          <p>{data.contacts} <Link to="/contacts">связаться с нами</Link> {data.contactsTwo}</p>
+        </div>}
+    </>
   );
 };
 
