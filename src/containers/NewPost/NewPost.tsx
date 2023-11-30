@@ -7,10 +7,11 @@ import Loading from '../../components/Loading/Loading';
 
 interface Props {
   onChange: () => void;
+  getError: (message: string) => void;
   title?: string;
 }
 
-const NewPost: React.FC<Props> = ({onChange, title = 'Add new post!'}) => {
+const NewPost: React.FC<Props> = ({onChange, getError, title = 'Add new post!'}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const params = useParams();
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const NewPost: React.FC<Props> = ({onChange, title = 'Add new post!'}) => {
         const response = await axiosApi.get<Post>(`/posts/${params.id}.json`);
         setPost(response.data);
       } catch (error: Error) {
-        console.log(error);
+        getError(error.message);
       }
     };
     void getPost();
@@ -40,7 +41,7 @@ const NewPost: React.FC<Props> = ({onChange, title = 'Add new post!'}) => {
       onChange();
       navigate('/');
     } catch (error: Error) {
-      console.log(error);
+      getError(error.message);
     } finally {
       setLoading(false);
     }
@@ -57,7 +58,7 @@ const NewPost: React.FC<Props> = ({onChange, title = 'Add new post!'}) => {
       onChange();
       navigate('/');
     } catch (error: Error) {
-      console.log(error);
+      getError(error.message);
     } finally {
       setLoading(false);
     }

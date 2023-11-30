@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Route, Routes} from 'react-router-dom';
+import {Alert} from 'react-bootstrap';
 import Toolbar from '../../components/Toolbar/Toolbar';
 import NewPost from '../NewPost/NewPost';
 import Home from '../Home/Home';
@@ -16,6 +17,8 @@ const App = () => {
   const [posts, setPosts] = useState<RoteComponent[]>([]);
   const [listPosts, setListPosts] = useState<ApiPost[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
   const getPosts = useCallback(async () => {
     try {
@@ -32,7 +35,7 @@ const App = () => {
       getListOfPosts(listOfPosts);
       setListPosts(listOfPosts);
     } catch (error: Error) {
-      console.log(error);
+      getError(error.message);
     } finally {
       setLoading(false);
     }
@@ -41,6 +44,11 @@ const App = () => {
   useEffect(() => {
     void getPosts();
   }, [getPosts]);
+
+  const getError = (message: string) => {
+    setShowAlert(true);
+    setError(message);
+  };
 
   const getListOfPosts = (posts: ApiPost[]) => {
     const fullPostList: RoteComponent[] = posts.map((item) => {
@@ -54,6 +62,12 @@ const App = () => {
 
   return (
     <>
+      <Alert variant="danger" show={showAlert} onClose={() => setShowAlert(false)} dismissible>
+        <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+        <p>
+          {error}
+        </p>
+      </Alert>
       <header className="MYheader">
         <Toolbar/>
       </header>
@@ -73,16 +87,16 @@ const App = () => {
               })}
             </Route>
             <Route path="/new-post" element={(
-              <NewPost onChange={getPosts}/>
+              <NewPost onChange={getPosts} getError={getError}/>
             )}/>
             <Route path="/edit-post/:id" element={(
-              <NewPost onChange={getPosts} title="Edit Post!"/>
+              <NewPost onChange={getPosts} title="Edit Post!" getError={getError}/>
             )}/>
             <Route path="/about" element={(
               <About/>
             )}/>
             <Route path="/contacts" element={(
-              <Contacts url="/email.json"/>
+              <Contacts url="/email.json" getError={getError}/>
             )}/>
             <Route path="*" element={(
               <h1>Not found</h1>

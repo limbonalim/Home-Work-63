@@ -6,9 +6,10 @@ import {Email} from '../../types';
 
 interface Props {
   url: string;
+  getError: (message: string) => void;
 }
 
-const Contacts: React.FC<Props> = React.memo(function Contacts({url}) {
+const Contacts: React.FC<Props> = React.memo(function Contacts({url, getError}) {
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<Email>({
     info: '',
@@ -22,7 +23,7 @@ const Contacts: React.FC<Props> = React.memo(function Contacts({url}) {
       const email = await axiosApi.get<Email>(url);
       setEmail(email.data);
     } catch (error: Error) {
-      console.log(error);
+      getError(error.message);
     } finally {
       setLoading(false);
     }
