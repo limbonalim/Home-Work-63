@@ -12,16 +12,20 @@ const AddForm: React.FC<Props> = React.memo(({onSubmit, onEdit, editPost}) => {
     title: '',
     description: '',
   });
+  const [button, setButton] = useState<string>('Add');
 
   if (editPost) {
     const getEditPost = useCallback(() => {
-      setPost(prevState => {
-        return {
-          ...prevState,
-          title: editPost.title,
-          description: editPost.description,
-        };
-      });
+      if (editPost.title && editPost.description) {
+        setButton('Edit');
+        setPost(prevState => {
+          return {
+            ...prevState,
+            title: editPost.title,
+            description: editPost.description,
+          };
+        });
+      }
     }, [editPost.title, editPost.description]);
 
     useEffect(() => {
@@ -31,7 +35,7 @@ const AddForm: React.FC<Props> = React.memo(({onSubmit, onEdit, editPost}) => {
 
   const onFormSubmit = (event: FormEvent) => {
     event.preventDefault();
-    if (editPost.title.length > 0 && editPost.description.length > 0) {
+    if (editPost.title && editPost.description) {
       onEdit(post);
     } else {
       onSubmit(post);
@@ -49,6 +53,7 @@ const AddForm: React.FC<Props> = React.memo(({onSubmit, onEdit, editPost}) => {
       [name]: value,
     }));
   };
+
 
   return (
     <div>
@@ -77,7 +82,7 @@ const AddForm: React.FC<Props> = React.memo(({onSubmit, onEdit, editPost}) => {
             placeholder="Description"
             rows="3"></textarea>
         </div>
-        <button type="submit" className="btn btn-outline-primary">Add</button>
+        <button type="submit" className="btn btn-outline-primary">{button}</button>
       </form>
     </div>
   );

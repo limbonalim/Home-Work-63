@@ -7,9 +7,10 @@ import axiosApi from '../../axios-api';
 interface Props {
   post: Post;
   onChange: () => void;
+  getError: (message: string) => void;
 }
 
-const MemoFullPost: React.FC<Props> = React.memo(function FullPost({post, onChange}) {
+const MemoFullPost: React.FC<Props> = React.memo(function FullPost({post, onChange, getError}) {
   const navigate = useNavigate();
   let date = new FormatDate(post.dateTime);
 
@@ -19,14 +20,14 @@ const MemoFullPost: React.FC<Props> = React.memo(function FullPost({post, onChan
       navigate('/');
       onChange();
     } catch (error: Error) {
-      console.log(error);
+      getError(error.message);
     }
   };
 
   const editPost: string = `/posts/${post.id}/edit`;
 
   return (
-    <div className="border p-2 rounded col-4">
+    <div className="border p-2 rounded col-6">
       <h3>{post.title}</h3>
       <p>{post.description}</p>
       <span>Created on: {date.getDate()}</span>

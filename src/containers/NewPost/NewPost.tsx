@@ -70,10 +70,10 @@ const NewPost: React.FC<Props> = ({onChange, getError, title = 'Add new post!'})
   return (
     <>
       {loading ? <Loading/> :
-        <>
+        <div className="w-100 d-flex flex-column">
           <h1>{title}</h1>
           <AddForm onSubmit={onSubmit} onEdit={onEdit} editPost={post}/>
-        </>}
+        </div>}
     </>
   );
 };

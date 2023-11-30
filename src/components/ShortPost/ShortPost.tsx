@@ -10,7 +10,7 @@ interface Props {
 
 const MemoShortPost: React.FC<Props> = React.memo(function ShortPost({dateTime, title, id}) {
   const data = new FormatDate(dateTime);
-  const link = `posts/:${id}`;
+  const link = `posts/${id}`;
   return (
     <div className="border btn-secondary border-2 rounded p-2">
       <p>Created on: {data.getDate()}</p>

@@ -53,11 +53,18 @@ const App = () => {
   const getListOfPosts = (posts: ApiPost[]) => {
     const fullPostList: RoteComponent[] = posts.map((item) => {
       return {
-        path: `/posts/:${item.id}`,
-        component: (<MemoFullPost post={item} onChange={getPosts}/>),
+        path: `/posts/${item.id}`,
+        component: (<MemoFullPost post={item} onChange={getPosts} getError={getError}/>),
       };
     });
-    setPosts(fullPostList);
+    const fullEditList: RoteComponent[] = posts.map((item) => {
+      return {
+        path: `/posts/:id/edit`,
+        component: (<NewPost onChange={getPosts} title="Edit Post!" getError={getError}/>),
+      };
+    });
+    const renderList: RoteComponent [] = [...fullPostList, ...fullEditList];
+    setPosts(renderList);
   };
 
   return (
@@ -88,9 +95,6 @@ const App = () => {
             </Route>
             <Route path="/new-post" element={(
               <NewPost onChange={getPosts} getError={getError}/>
-            )}/>
-            <Route path="/posts/:id/edit" element={(
-              <NewPost onChange={getPosts} title="Edit Post!" getError={getError}/>
             )}/>
             <Route path="/about" element={(
               <About getError={getError}/>
